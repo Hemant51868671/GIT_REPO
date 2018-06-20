@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:cxf="http://camel.apache.org/schema/cxf"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans  http://www.springframework.org/schema/beans/spring-beans.xsd  http://camel.apache.org/schema/cxf  http://camel.apache.org/schema/cxf/camel-cxf.xsd  http://camel.apache.org/schema/spring  http://camel.apache.org/schema/spring/camel-spring.xsd">
+    <!-- You could also define a traditional camel context here -->
+    <bean class="com.oup.service.OupServiceImpl" id="oupServiceImpl"/>
+    <bean class="com.oup.service.RestService" id="restService">
+        <!-- <constructor-arg index="0" ref="camelServlet" /> -->
+        <!-- <constructor-arg index="0" ref="servletRegistrationBean" /> -->
+    </bean>
+    <bean class="org.apache.cxf.interceptor.LoggingInInterceptor" id="logIn"/>
+    <bean class="org.apache.cxf.interceptor.LoggingOutInterceptor" id="logOut"/>
+    <cxf:rsServer address="http://localhost:8080" id="cxfendpoint">
+        <cxf:serviceBeans>
+            <!-- <ref bean="servletRegistrationBean" /> -->
+            <ref bean="restService"/>
+        </cxf:serviceBeans>
+        <cxf:providers>
+            <ref bean="jacksonJsonProvider"/>
+        </cxf:providers>
+        <cxf:inInterceptors>
+            <ref bean="logIn"/>
+        </cxf:inInterceptors>
+        <cxf:outInterceptors>
+            <ref bean="logOut"/>
+        </cxf:outInterceptors>
+    </cxf:rsServer>
+    <bean class="com.fasterxml.jackson.databind.ObjectMapper" id="objectMapper"/>
+    <bean
+        class="org.springframework.beans.factory.config.MethodInvokingFactoryBean" id="objectMapperEnable">
+        <property name="targetObject" ref="objectMapper"/>
+        <property name="targetMethod" value="configure"/>
+        <property name="arguments">
+            <list>
+                <value>STRICT_DUPLICATE_DETECTION</value>
+                <value>true</value>
+            </list>
+        </property>
+    </bean>
+    <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider" id="jacksonJsonProvider">
+        <property name="mapper" ref="objectMapperEnable"/>
+    </bean>
+    <camelContext id="camelContext-fc673265-de2e-45f1-9cbf-63c13d8aa965" xmlns="http://camel.apache.org/schema/spring">
+        <route id="_route1">
+            <from id="_from1" uri="cxfrs:bean:cxfendpoint?bindingStyle=SimpleConsumer"/>
+            <toD id="_toD1" uri="direct:${header.operationName}"/>
+        </route>
+        <route id="_route2">
+            <from id="_from2" uri="direct:welcomeEmployee"/>
+            <bean id="_bean1" method="welcome" ref="oupServiceImpl"/>
+            <to id="_to1" uri="bean:oupServiceImpl?method=welcome"/>
+        </route>
+        <route id="_route3">
+            <from id="_from3" uri="direct:consumeEmployeeXml"/>
+            <bean id="_bean2" method="consumeEmployeeXml" ref="oupServiceImpl"/>
+            <to id="_to2" uri="bean:oupServiceImpl?method=consumeEmployeeXml"/>
+        </route>
+    </camelContext>
+</beans>
