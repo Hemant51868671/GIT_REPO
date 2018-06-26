@@ -41,11 +41,11 @@
 		    <version>2.20.0</version>
 		</dependency>
 		
-		<!-- <dependency>
-		    <groupId>org.apache.camel</groupId>
-		    <artifactId>camel-jaxb</artifactId>
-		    <version>2.20.0</version>
-		</dependency> -->
+		<dependency>
+        	<groupId>org.apache.cxf</groupId>
+        	<artifactId>cxf-bundle-jaxrs</artifactId>
+        	<version>2.7.18</version>
+		</dependency>
 		
 		<dependency>
   			<groupId>org.apache.camel</groupId>
@@ -62,8 +62,15 @@
 		<dependency>
 		    <groupId>org.codehaus.jackson</groupId>
 		    <artifactId>jackson-jaxrs</artifactId>
-		    <version>1.1.1</version>
+		    <version>1.9.10</version>
 		</dependency>
+		
+		<!-- <dependency>
+		    <groupId>org.apache.camel</groupId>
+		    <artifactId>camel-xmlbeans</artifactId>
+		    <version>2.20.0</version>
+		</dependency> -->
+		
 		
 		
 		<!-- <dependency>

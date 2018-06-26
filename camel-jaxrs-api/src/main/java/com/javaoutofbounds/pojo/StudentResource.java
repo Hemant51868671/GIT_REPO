@@ -63,18 +63,33 @@ public class StudentResource {
 	}
 	
 	@GET
-	@Path("/getAll")
+	/*@Path("/getAll")*/
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<StudentDetails> getAllStudents() {
 		return new ArrayList<StudentDetails>(studentMap.values());
 	}
 	
 	@POST
-	@Path("/saveStudent1")
+	/*@Path("/saveStudent1")*/
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public StudentDetails saveStudent(StudentDetails inputDetail) {
 		System.out.println("Student details returned =================== "+inputDetail.toString());
+		return inputDetail;
+	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_XML)
+	@Consumes(MediaType.APPLICATION_XML)
+	public Employee saveEmployee(Employee inputDetail) {
+		//System.out.println("Employee details returned =================== "+inputDetail);
+		/*StudentDetails sd1 = new StudentDetails();
+		sd1.setId(""+inputDetail.getId());
+		sd1.setName(inputDetail.getName());
+		sd1.setGrade(inputDetail.getAddress());
+		sd1.setMarks(65.78);*/
+		//new Employee(100000, "sdkfhdkjfh", "dkhdkghk");
+		/*Response response = Response.status(200).type(MediaType.APPLICATION_XML).entity(inputDetail).build();*/
 		return inputDetail;
 	}
 }

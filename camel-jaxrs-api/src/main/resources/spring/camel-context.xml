@@ -9,10 +9,18 @@
 
 	<bean id="studentsApiResource"
 		class="com.javaoutofbounds.pojo.StudentResource" />
-		
+
+	<bean id="employee" class="com.javaoutofbounds.pojo.Employee" />
+
 	<camelContext id="camelContext"
 		xmlns="http://camel.apache.org/schema/spring">
-		
+
+		<dataFormats>
+			<jacksonxml id="employeeJacksonXml"
+				unmarshalTypeName="com.javaoutofbounds.pojo.Employee"
+				prettyPrint="true" />
+		</dataFormats>
+
 		<restConfiguration component="servlet"
 			contextPath="/" port="8080" enableCORS="true" bindingMode="auto" />
 		<rest>
@@ -24,10 +32,29 @@
 				<to uri="bean:studentsApiResource?method=getStudent" />
 			</get>
 
-			<post uri="/saveStudent" type="com.javaoutofbounds.pojo.StudentDetails">
+			<post uri="/saveStudent"
+				type="com.javaoutofbounds.pojo.StudentDetails">
 				<!-- <to uri="direct:saveStudent" /> -->
 				<to uri="bean:studentsApiResource?method=saveStudent" />
 			</post>
+
+			<post uri="/saveEmployee">
+				<to uri="direct:saveEmployee" />
+				<!-- <to uri="bean:studentsApiResource?method=saveEmployee" /> -->
+			</post>
 		</rest>
+		<route id="saveEmployee">
+			<from uri="direct:saveEmployee" />
+			<log message="Before unmarshlling ###########: ${body}" />
+			
+			<unmarshal ref="employeeJacksonXml" />
+			
+			<log message="After unmarshlling ===========: ${body}" />
+			
+			<to uri="bean:studentsApiResource?method=saveEmployee" />
+			
+			<marshal ref="employeeJacksonXml" />
+			<log message="After marshlling ===========: ${body}" />
+		</route>
 	</camelContext>
 </beans>

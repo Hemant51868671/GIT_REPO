@@ -11,7 +11,6 @@ import org.springframework.context.annotation.ImportResource;
 
 @SpringBootApplication
 @ImportResource({"classpath:spring/camel-context.xml"})
-//@ComponentScan("com.oup")
 public class CamelJaxrsApiSpringBootApp extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
